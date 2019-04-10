@@ -3,6 +3,8 @@
   Note: while sending, LoRa radio is not listening for incoming messages.
 
   IPG - MCM 2019
+  SENDING NODE
+  0xFF como BroadCast
 */
 #include <SPI.h>      // include libraries
 #include <LoRa.h>    //https://github.com/sandeepmistry/arduino-LoRa
@@ -16,11 +18,6 @@
 #define SX1278_RST  14   // GPIO14 -- SX1278's RESET
 #define SX1278_DI0  26   // GPIO26 -- SX1278's IRQ(Interrupt Request)
 
-/* OUTRA BOARD
-#define OLED_SDA    21    // GPIO21  -- OLED'S SDA
-#define OLED_SCL    22    // GPIO22  -- OLED's SCL Shared with onboard LED! :(
-#define OLED_RST    16    // GPIO16  -- OLED's VCC?
-*/
 
 #define OLED_ADDR   0x3c  // OLED's ADDRESS
 #define OLED_SDA  4
