@@ -4,12 +4,8 @@
 #### (MCM 2018/19 @IPG)
 Mestrado Computação Móvel 2018/19: Implementação rede Mesh com ESP32 LoRa
 
-## Versão 0.1
-Ping <-> Pong
-POST com SSL
 ## Architecture
 
-![bda_archit](https://user-images.githubusercontent.com/2634610/54847053-415efd00-4cd5-11e9-93f2-e43b31660adf.png)
 
 ## Versioning
 ##### V.0.1.1
