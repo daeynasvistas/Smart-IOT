@@ -6,6 +6,10 @@
 		{
 			"name": "ESP32-NODE",
 			"path": "ESP32-NODE"
+		},
+		{
+			"name": "ESP32-NODE-LoRa",
+			"path": "ESP32-NODE-LoRa"
 		}
 	],
 	"settings": {
