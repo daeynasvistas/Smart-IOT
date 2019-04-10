@@ -27,12 +27,21 @@
 #define LORA_BAND   868.9E6 // LoRa Band (Europe)
 
 
+// generate random message simulate Sensor
+String rndMsg(){
+  String randomTemp = String(random(20,860)/ 10.0);
+  String randomHum = String(random(200,900)/ 10.0);
+  String JSON = "{\"T\":"+randomTemp+",\"H\":"+randomHum+"}";
+  return String(JSON);
+}
+
+
 
 //////////////////////CONFIG 1///////////////////////////
 byte localAddress = 8;     // address of this device
 byte destination = 18;     // destination to send to
 int interval = 4000;       // interval between sends
-String message = "Ping!";    // send a message
+String message = "Hello";    // send a message
 ///////////////////////////////////////////////////////
 
 
@@ -44,6 +53,8 @@ int interval = 2000;       // interval between sends
 String message = "Pong!"; // send a message
 ///////////////////////////////////////////////////////
 */
+
+
 
 String outgoing;              // outgoing message
 byte msgCount = 0;            // count of outgoing messages
@@ -59,16 +70,16 @@ void printScreen() {
   display.display();
 
   display.setColor(WHITE);
-  display.drawString(0, 00, "LoRa Duplex sender " + String(localAddress));
+  display.drawString(0, 00, String(LORA_BAND/1000000)+" LoRa sender " + String(localAddress));
 
   display.drawString(0, 10,"Me: " + String(localAddress)
-                          + "  To: " + String(destination)
+                          + " To: " + String(destination)
                           + " N: " + String(msgCount));
-  display.drawString(0, 20, String(LORA_BAND/1000000) +" Tx: " + message);
+  display.drawString(0, 20, "Tx: " + message);
   display.display();
 }
 
-void sendMessage(String outgoing) {
+void sendMessage(String outgoing, byte destination) {
   LoRa.beginPacket();                   // start packet
   LoRa.write(destination);              // add destination address
   LoRa.write(localAddress);             // add sender address
@@ -122,12 +133,13 @@ void onReceive(int packetSize) {
   display.drawLine(0,31,127,31);
   display.drawString(0, 32, "Rx: " + incoming);
 
-  display.drawString(0, 42, "RSSI: " + String(LoRa.packetRssi())
-                          + " SNR: " + String(LoRa.packetSnr()));
-  display.drawString(0, 52, "FR:"  + String(sender)
+  display.drawString(0, 42, "FR:"  + String(sender)
                           + " TO:" + String(recipient)
-                          + " LN:" + String(incomingLength)
+                          + " LG:" + String(incomingLength)
                           + " ID:" + String(incomingMsgId));
+  display.drawString(0, 52, "RSSI: " + String(LoRa.packetRssi())
+                          + " SNR: " + String(LoRa.packetSnr()));
+
   display.display();
 
   // if message is for this device, or broadcast, print details:
@@ -208,7 +220,8 @@ void setup() {
 
 void loop() {
   if (millis() - lastSendTime > interval) {
-    sendMessage(message);
+    message = rndMsg();
+    sendMessage(message, destination);
     lastSendTime = millis();            // timestamp the message
     interval = random(4000) + 1000;     // 2-3 seconds
     LoRa.receive();                     // go back into receive mode

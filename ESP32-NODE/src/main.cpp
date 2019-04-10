@@ -50,7 +50,7 @@ String message = "Ping!";    // send a message
 byte localAddress = 18;   // address of this device
 byte destination = 8;     // destination to send to
 int interval = 4000;      // interval between sends
-String message = "Pong!"; // send a message
+String message = "OK"; // send a message
 ///////////////////////////////////////////////////////
 
 String outgoing;       // outgoing message
@@ -68,10 +68,10 @@ void printScreen()
   display.display();
 
   display.setColor(WHITE);
-  display.drawString(0, 00, "LoRa Duplex sender " + String(localAddress));
+  display.drawString(0, 00, String(LORA_BAND / 10000000) + " LoRa sender " + String(localAddress));
 
   display.drawString(0, 10, "Me: " + String(localAddress) + "  To: " + String(destination) + " N: " + String(msgCount));
-  display.drawString(0, 20,  String(LORA_BAND / 1000000) +" Tx: " + message);
+  display.drawString(0, 20, "Tx: " + message);
   display.display();
 }
 
@@ -135,8 +135,9 @@ void onReceive(int packetSize)
   display.drawLine(0, 31, 127, 31);
   display.drawString(0, 32, "Rx: " + incoming);
 
-  display.drawString(0, 42, "RSSI: " + String(LoRa.packetRssi()) + " SNR: " + String(LoRa.packetSnr()));
-  display.drawString(0, 52, "FR:" + String(sender) + " TO:" + String(recipient) + " LN:" + String(incomingLength) + " ID:" + String(incomingMsgId));
+  display.drawString(0, 42, "FR:" + String(sender) + " TO:" + String(recipient) + " LG:" + String(incomingLength) + " ID:" + String(incomingMsgId));
+  display.drawString(0, 52, "RSSI: " + String(LoRa.packetRssi()) + " SNR: " + String(LoRa.packetSnr()));
+
   display.display();
 
   // if message is for this device, or broadcast, print details:
