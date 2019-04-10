@@ -13,6 +13,8 @@ Mestrado Computação Móvel 2018/19: Implementação rede Mesh com ESP32 LoRa
 * Ping <-> Pong (LoRa)
 * POST com SSL (ESP32-NODE)
 
+![IMG_20190410_180948](https://user-images.githubusercontent.com/2634610/55899368-85e70580-5bbc-11e9-8db2-6111620d54fc.jpg)
+
 ## Built With
 
 * [TTGO ESP32 LoRa](https://eu.banggood.com/buy/ttgo.html?zf=31340941)
