@@ -6,4 +6,5 @@ Mestrado Computação Móvel 2018/19: Implementação rede Mesh com ESP32 LoRa
 
 ## Versão 0.1
 Ping <-> Pong
+
 POST com SSL
