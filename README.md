@@ -30,8 +30,10 @@ Mestrado Computação Móvel 2018/19: Implementação rede Mesh com ESP32 LoRa
 ## Contributing
 
 ## Authors
+Daniel (https://github.com/Daeynasvistas)
+
 Luís Pimentel (https://github.com/lpimentel)
-Daniel MEndes (https://github.com/Daeynasvistas)
+
 
 ## License
 
