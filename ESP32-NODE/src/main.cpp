@@ -25,8 +25,11 @@
 #define LORA_BAND 868.9E6 // LoRa Band (Europe)
 
 #include <WiFiClientSecure.h>
-
 WiFiClientSecure client;
+
+#include "ESPAsyncWebServer.h"
+ AsyncWebServer API(80);
+
 
 char ssid[] = "EPT-HOTSPOT"; //  your network SSID (name of wifi network)
 char pass[] = "";            // your network password
@@ -57,6 +60,16 @@ String outgoing;       // outgoing message
 byte msgCount = 0;     // count of outgoing messages
 long lastSendTime = 0; // last send time
 
+// ------- JSON sensor ----
+String json= 
+  "{\"id\":8,\"time\":\"0001-01-01T00:00:00Z\",\"air_temp\":23.10,\"air_humidity\":28.7,\"air_pressure\":1540,\"air_CO2\":982,\"air_TVOC\":468,\"lux\":540,\"flame\":10,\"soil_humidity\":1540,\"sound\":40},"
+  "{\"id\":8,\"time\":\"0001-01-01T00:00:00Z\",\"air_temp\":23.10,\"air_humidity\":28.7,\"air_pressure\":1540,\"air_CO2\":982,\"air_TVOC\":468,\"lux\":540,\"flame\":10,\"soil_humidity\":1540,\"sound\":40},"
+  "{\"id\":18,\"time\":\"0001-01-01T00:00:00Z\",\"air_temp\":23.10,\"air_humidity\":28.7,\"air_pressure\":1540,\"air_CO2\":982,\"air_TVOC\":468,\"lux\":540,\"flame\":10,\"soil_humidity\":1540,\"sound\":40},"
+  "{\"id\":18,\"time\":\"0001-01-01T00:00:00Z\",\"air_temp\":23.10,\"air_humidity\":28.7,\"air_pressure\":1540,\"air_CO2\":982,\"air_TVOC\":468,\"lux\":540,\"flame\":10,\"soil_humidity\":1540,\"sound\":40}"
+"";
+// REVER problema com last comma
+
+
 SSD1306 display(OLED_ADDR, OLED_SDA, OLED_SCL);
 
 void printScreen()
@@ -68,7 +81,7 @@ void printScreen()
   display.display();
 
   display.setColor(WHITE);
-  display.drawString(0, 00, String(LORA_BAND / 10000000) + " LoRa sender " + String(localAddress));
+  display.drawString(0, 00, String(LORA_BAND / 1000000) + " LoRa sender " + String(localAddress));
 
   display.drawString(0, 10, "Me: " + String(localAddress) + "  To: " + String(destination) + " N: " + String(msgCount));
   display.drawString(0, 20, "Tx: " + message);
@@ -133,7 +146,7 @@ void onReceive(int packetSize)
 
   display.setColor(WHITE);
   display.drawLine(0, 31, 127, 31);
-  display.drawString(0, 32, "Rx: " + incoming);
+  display.drawString(0, 32, "Rx: " +String(incomingMsgId)+ " "+ incoming);
 
   display.drawString(0, 42, "FR:" + String(sender) + " TO:" + String(recipient) + " LG:" + String(incomingLength) + " ID:" + String(incomingMsgId));
   display.drawString(0, 52, "RSSI: " + String(LoRa.packetRssi()) + " SNR: " + String(LoRa.packetSnr()));
@@ -218,6 +231,15 @@ void connectWIFI(){
   delay(1500);
 }
 
+/// ------------------------ WEB API metodos --------
+void onRequest(AsyncWebServerRequest *request){
+  //Handle Unknown Request - permitir request mais rápidas tudo 404
+  request->send(404);
+}
+
+
+
+
 void setup()
 {
 
@@ -282,6 +304,37 @@ void setup()
   delay(1500);
   display.clear();
   display.display();
+
+
+// ---////////////////// WEBAPI ///////////////////////////////////
+     // -------- API endPoint ----
+        API.on("/heap", HTTP_GET, [](AsyncWebServerRequest *request){
+          request->send(200, "text/plain", String(ESP.getFreeHeap()));
+        });
+
+        API.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+        const char index_html[] = "<H1>MCM Sistemas Embebidos API</H1>"; // large char array, tested with 14k
+        request->send_P(200, "text/html", index_html);
+        });
+
+      //----- GET -----
+        API.on("/API/", HTTP_GET, [](AsyncWebServerRequest *request){
+          request->send(200, "application/json", "{\"status\": \"online\"}");
+        });
+
+        API.on("/API/TEMP", HTTP_GET, [](AsyncWebServerRequest *request){
+          request->send(200, "application/json", "["+json+"]");
+          //alternativa acesso direto ao sensor
+        });
+
+
+  // START ----
+  // Catch-All Handlers
+  API.onNotFound(onRequest);
+  API.begin();
+  Serial.println("HTTP server started");
+// ---//////////////////////////////////////////////////////////////
+
 }
 
 void loop()
