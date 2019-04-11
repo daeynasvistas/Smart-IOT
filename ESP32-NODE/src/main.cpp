@@ -59,6 +59,7 @@ String message = "OK"; // send a message
 String outgoing;       // outgoing message
 byte msgCount = 0;     // count of outgoing messages
 long lastSendTime = 0; // last send time
+uint64_t chipid; 
 
 // ------- JSON sensor ----
 String json= 
@@ -295,6 +296,8 @@ void setup()
 */
   LoRa.setSpreadingFactor(8); // ranges from 6-12, default 7 see API docs
   LoRa.setTxPower(13, PA_OUTPUT_RFO_PIN);
+  chipid=ESP.getEfuseMac();//The chip ID is essentially its MAC address(length: 6 bytes).
+
 
   //LoRa.onReceive(onReceive);
   LoRa.receive();
@@ -312,17 +315,27 @@ void setup()
           request->send(200, "text/plain", String(ESP.getFreeHeap()));
         });
 
+        API.on("/API/id", HTTP_GET, [](AsyncWebServerRequest *request){
+       //   Serial.printf("ESP32 Chip ID = %04X",(uint16_t)(chipid>>32));//print High 2 bytes
+	     //   Serial.printf("%08X\n",(uint32_t)chipid);//print Low 4bytes.
+          char loraBoardId[12];
+          snprintf(loraBoardId, 12, "%04X%08X", (uint16_t)(chipid>>32), (uint32_t)chipid);
+          request->send(200, "application/json", "{\"ChipID\": \""+String(loraBoardId)+"\"}");
+        });        
+
         API.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
         const char index_html[] = "<H1>MCM Sistemas Embebidos API</H1>"; // large char array, tested with 14k
         request->send_P(200, "text/html", index_html);
         });
+
+
 
       //----- GET -----
         API.on("/API/", HTTP_GET, [](AsyncWebServerRequest *request){
           request->send(200, "application/json", "{\"status\": \"online\"}");
         });
 
-        API.on("/API/TEMP", HTTP_GET, [](AsyncWebServerRequest *request){
+        API.on("/API/ALL", HTTP_GET, [](AsyncWebServerRequest *request){
           request->send(200, "application/json", "["+json+"]");
           //alternativa acesso direto ao sensor
         });
