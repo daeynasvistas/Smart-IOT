@@ -22,6 +22,17 @@
 #define OLED_SCL 15
 #define OLED_RST 16
 
+// LoRaWAN Parameters
+#define BAND    868100000  //you can set band here directly,e.g. 868E6,915E6
+#define PABOOST false
+#define TXPOWER 14
+#define SPREADING_FACTOR 12
+#define BANDWIDTH 125000
+#define CODING_RATE 5
+#define PREAMBLE_LENGTH 8
+#define SYNC_WORD 0x34
+
+
 #define LORA_BAND 868.9E6 // LoRa Band (Europe)
 
 #include <WiFiClientSecure.h>
@@ -243,6 +254,16 @@ void onRequest(AsyncWebServerRequest *request){
 
 
 
+void configForLoRaWAN()
+{
+  LoRa.setTxPower(TXPOWER);
+  LoRa.setSpreadingFactor(SPREADING_FACTOR);
+  LoRa.setSignalBandwidth(BANDWIDTH);
+  LoRa.setCodingRate4(CODING_RATE);
+  LoRa.setPreambleLength(PREAMBLE_LENGTH);
+  LoRa.setSyncWord(SYNC_WORD);
+  LoRa.crc();
+}
 
 void setup()
 {
@@ -273,6 +294,11 @@ void setup()
   // override the default CS, reset, and IRQ pins (optional)
   LoRa.setPins(SX1278_CS, SX1278_RST, SX1278_DI0); // set CS, reset, IRQ pin
 
+
+  // should be done before LoRa.begin
+  configForLoRaWAN();
+
+  
   if (!LoRa.begin(LORA_BAND))
   { // initialize ratio at 868 MHz
     Serial.println("LoRa init failed. Check your connections.");
@@ -296,9 +322,20 @@ void setup()
   // If your receiver RSSI is very weak and little affected by a better antenna, change this!
   LoRa.setTxPower(14, PA_OUTPUT_RFO_PIN);
   // DAEY change for BOOST performance
+
+
+ //ves 0.1
+  LoRa.setSpreadingFactor(10); // ranges from 6-12, default 7 see API docs
+  LoRa.setTxPower(20, PA_OUTPUT_RFO_PIN);
+  */
+/*
+  * ves 0.2
+  // The following settings should maximize reliability
+  LoRa.setTxPower(20); // going beyond 10 is illegal
+  LoRa.setSpreadingFactor(12);
+  LoRa.setSignalBandwidth(125000);
+  LoRa.setCodingRate4(5);
 */
-  LoRa.setSpreadingFactor(8); // ranges from 6-12, default 7 see API docs
-  LoRa.setTxPower(13, PA_OUTPUT_RFO_PIN);
   chipid=ESP.getEfuseMac();//The chip ID is essentially its MAC address(length: 6 bytes).
 
 
@@ -357,7 +394,7 @@ void loop()
   {
     sendMessage(message);
     lastSendTime = millis();        // timestamp the message
-    interval = random(4000) + 1000; // 3-4 seconds
+    interval = random(1000) + 10000; // 10 seconds
     LoRa.receive();                 // go back into receive mode
   }
   int packetSize = LoRa.parsePacket();
