@@ -31,7 +31,7 @@ WiFiClientSecure client;
  AsyncWebServer API(80);
 
 
-char ssid[] = "EPT-HOTSPOT"; //  your network SSID (name of wifi network)
+char ssid[] = "EPT-HOTSPOT_"; //  your network SSID (name of wifi network)
 char pass[] = "";            // your network password
 
 char server[] = "www.howsmyssl.com"; // Server URL
@@ -174,7 +174,8 @@ void connectWIFI(){
   WiFi.begin(ssid, pass);
 
   // attempt to connect to Wifi network:
-  while (WiFi.status() != WL_CONNECTED)
+  unsigned long startedWaiting = millis();
+  while((WiFi.status() != WL_CONNECTED) && (millis() - startedWaiting <= 10000))
   {
     Serial.print(".");
     // wait 1 second for re-trying
@@ -192,7 +193,7 @@ void connectWIFI(){
   display.drawString(00, 20, WiFi.localIP().toString().c_str());
   display.display();
   delay(1500);
-
+/*
   Serial.println("\nStarting connection to server...");
   if (client.connect(server, 443))
   { //client.connect(server, 443, test_ca_cert, test_client_cert, test_client_key)
@@ -212,6 +213,7 @@ void connectWIFI(){
     delay(50); //
     Serial.print(".");
   }
+ 
   // if there are incoming bytes available
   // from the server, read them and print them:
   while (client.available())
@@ -230,6 +232,7 @@ void connectWIFI(){
   display.drawString(00, 30, "SSL OK!");
   display.display();
   delay(1500);
+   */
 }
 
 /// ------------------------ WEB API metodos --------
@@ -316,8 +319,6 @@ void setup()
         });
 
         API.on("/API/id", HTTP_GET, [](AsyncWebServerRequest *request){
-       //   Serial.printf("ESP32 Chip ID = %04X",(uint16_t)(chipid>>32));//print High 2 bytes
-	     //   Serial.printf("%08X\n",(uint32_t)chipid);//print Low 4bytes.
           char loraBoardId[12];
           snprintf(loraBoardId, 12, "%04X%08X", (uint16_t)(chipid>>32), (uint32_t)chipid);
           request->send(200, "application/json", "{\"ChipID\": \""+String(loraBoardId)+"\"}");
