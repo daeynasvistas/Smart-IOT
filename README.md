@@ -8,6 +8,12 @@ Mestrado Computação Móvel 2018/19: Implementação rede Mesh com ESP32 LoRa
 
 
 ## Versioning
+
+##### V.0.3
+
+* Mesh (AutoDiscover)
+![20190611_184051](https://user-images.githubusercontent.com/2634610/59294607-c37a1480-8c79-11e9-82c3-a8604d60d309.jpg)
+
 ##### V.0.1.2
 
 * WebAPI (Async)
