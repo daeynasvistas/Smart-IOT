@@ -1,0 +1,83 @@
+ {  
+  "posts": [
+    { "id": 1, "title": "Post 1" },
+    { "id": 2, "title": "Post 2" },
+    { "id": 3, "title": "Post 3" }
+  ],
+  "comments": [
+    { "id": 1, "body": "some comment", "postId": 1 },
+    { "id": 2, "body": "some comment", "postId": 1 }
+  ],
+  "profile": {
+    "name": "typicode"
+  },
+  "nodes":[
+    {
+        "id": "1A0000000",
+        "date_of_value": 1556969160,
+        "air_temp": 23.1,
+        "air_humidity": 28.7,
+        "air_pressure": 1540,
+        "air_CO2": 982,
+        "air_TVOC": 468,
+        "lux": 540,
+        "flame": 10,
+        "soil_humidity": 230,
+        "sound": 40
+    },
+    {
+        "id": "1A0000000",
+        "date_of_value": 1556968800,
+        "air_temp": 22.0,
+        "air_humidity": 30.0,
+        "air_pressure": 1140,
+        "air_CO2": 952,
+        "air_TVOC": 458,
+        "lux": 640,
+        "flame": 9,
+        "soil_humidity": 540,
+        "sound": 40
+    },
+    {
+        "id": "1A0000000",
+        "date_of_value": 1556969160,
+        "air_temp": 36.0,
+        "air_humidity": 35.0,
+        "air_pressure": 950,
+        "air_CO2": 120,
+        "air_TVOC": 10,
+        "lux": 1023,
+        "flame": 10,
+        "soil_humidity": 800,
+        "sound": 40
+    },
+    {
+        "id": "1A0000000",
+        "date_of_value": 1556968800,
+        "air_temp": 21.1,
+        "air_humidity": 38.7,
+        "air_pressure": 300,
+        "air_CO2": 382,
+        "air_TVOC": 568,
+        "lux": 500,
+        "flame": 10,
+        "soil_humidity": 140,
+        "sound": 40
+    }
+],
+   "node":
+    {
+        "id": "1A0000000",
+        "date_of_value": 1556969160,
+        "air_temp": 23.2,
+        "air_humidity": 28.7,
+        "air_pressure": 1540,
+        "air_CO2": 982,
+        "air_TVOC": 468,
+        "lux": 540,
+        "flame": 10,
+        "soil_humidity": 230,
+        "sound": 40
+    }
+  
+}
